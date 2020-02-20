@@ -11,16 +11,27 @@
   <body>
     <header class="navbar navbar-fixed-top navbar-inverse">
       <div class="container">
-        <%= link_to "ContractIO", '#', id: "logo" %>
+        <%= link_to "ContractIO", '/', id: "logo" %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
-            <li><%= link_to "Home",   '#' %></li>
-            <li><%= link_to "Log in", '#' %></li>
+            <li><%= link_to "Home",   '/'  %></li>
+            <li><%= link_to "Log in", login_path %></li>
+            <% if logged_in? %>
+              <li><%= link_to "Contracts", '#' %></li>
+
+              <li><%= link_to "Log out", logout_path, method: :delete %></li>
+
+            <% end %>
+
           </ul>
         </nav>
       </div>
     </header>
     <div class="container">
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
+
       <%= yield %>
     </div>
   </body>
