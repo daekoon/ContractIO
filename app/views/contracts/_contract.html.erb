@@ -1,0 +1,6 @@
+<li id="contract-<%= contract.id %>">
+  <span class="name"><%= link_to contract.name, contract %></span>
+  <span class="timestamp">
+    Created <%= time_ago_in_words(contract.created_at) %> ago.
+  </span>
+</li>
