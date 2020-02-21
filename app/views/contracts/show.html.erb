@@ -2,25 +2,49 @@
 
 <div class="input-group">
 
-    <%= link_to edit_contract_path(@contract.id) do %>
-        <button type="button" class="btn btn-primary">Edit</button>
-    <% end %>
+  <%= link_to edit_contract_path(@contract.id) do %>
+    <button type="button" class="btn btn-primary">Edit</button>
+  <% end %>
 
-    <%= link_to edit_contract_path(@contract.id) do %>
-        <button type="button" class="btn btn-success">Print</button>
-    <% end %>
+  <%= link_to edit_contract_path(@contract.id) do %>
+    <button type="button" class="btn btn-success">Generate</button>
+  <% end %>
 
-    <button type="button" class="btn btn-success">Add Clause</button>
+  <button type="button" class="btn btn-success">Add Clause</button>
 </div>
 <center><h1><%= @contract.name %></h1></center>
+<h2>Contract Details</h2>
 
-<div>Lender Name: <%= @contract.lender_name %> </div>
-<div>Borrower Name: <%= @contract.borrower_name %> </div>
-<div>Lender Address: <%= @contract.lender_address %> </div>
-<div>Loan Amount: <%= @contract.loan_amount %> </div>
+<div><b>Contract type:</b> <%= @contract.contract_type %> </div>
+<div><b>Lender Name:</b> <%= @contract.lender_name %> </div>
+<div><b>Borrower Name:</b> <%= @contract.borrower_name %> </div>
+<div><b>Lender Address:</b> <%= @contract.lender_address %> </div>
+<div><b>Borrower Address:</b> <%= @contract.borrower_address %> </div>
+<div><b>Loan Amount:</b> <%= @contract.loan_amount %> </div>
+<div><b>Loan Duration:</b> <%= @contract.loan_duration %> months </div>
+<div><b>Interest Rate:</b> <%= @contract.interest_rate %> % </div>
 
-<h2> Delete clause</h2>
-<% @clauses.each do |clause| %>
-    <p>Clause: <%= clause.text %></p>
-    <button>delete clause</button>
-<% end %>
+<h2>Current clauses</h2>
+<% counter = 0 %>
+<table id='employee-table' class="table table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Clause</th>
+      <th>Explanation</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @clauses.each do |clause| %>
+      <% counter += 1 %>
+      <tr>
+        <td><%= counter %></td>
+        <td><%= clause.text %></td>
+        <td><%= clause.explanation_text %></td>
+        <td><button>Delete</button></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

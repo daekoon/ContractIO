@@ -37,6 +37,8 @@ class ContractsController < ApplicationController
     contract.loan_duration = params[:loan_duration]
     contract.user = current_user
 
+    generate_clauses(contract)
+
     contract.save!
     redirect_to contract_path(contract.id)
   end
@@ -45,6 +47,7 @@ class ContractsController < ApplicationController
     # For now this is hard coded to create loan contract only
     # Refactor in the future if we decide to work further on this
     contract = Contract.new
+    contract.contract_type = 'Loan'
 
     contract.name = params[:name]
     contract.lender_address = params[:lender_address]
@@ -65,6 +68,10 @@ class ContractsController < ApplicationController
   private
 
   def generate_clauses(contract)
+    contract.clauses.each do |clause|
+      Clause.find(clause).destroy
+    end
+
     all_clauses = []
     base_template = ClauseTemplate.find_by(name: 'loan_base')
     parameters = [contract.lender_name, contract.borrower_name, contract.lender_address,
