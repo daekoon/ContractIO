@@ -10,15 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_21_070314) do
+ActiveRecord::Schema.define(version: 2020_02_21_172136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "clause_templates", force: :cascade do |t|
+    t.string "name"
+    t.string "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "merge_tags", default: [], array: true
+    t.string "explanation_text"
+  end
 
   create_table "clauses", force: :cascade do |t|
     t.string "name"
     t.string "tags", array: true
     t.string "text"
+    t.string "explanation_text"
   end
 
   create_table "contracts", force: :cascade do |t|

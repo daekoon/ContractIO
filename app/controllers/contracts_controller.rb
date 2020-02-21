@@ -40,6 +40,8 @@ class ContractsController < ApplicationController
   end
 
   def generate
+    # For now this is hard coded to create loan contract only
+    # Refactor in the future if we decide to work further on this
     contract = Contract.new
 
     contract.name = params[:name]

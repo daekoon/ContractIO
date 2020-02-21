@@ -1,16 +1,18 @@
 # == Schema Information
 #
-# Table name: clauses
+# Table name: clause_templates
 #
 #  id               :bigint           not null, primary key
 #  explanation_text :string
+#  merge_tags       :string           default("{}"), is an Array
 #  name             :string
-#  tags             :string           is an Array
 #  text             :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 require 'test_helper'
 
-class ClauseTest < ActiveSupport::TestCase
+class ClauseTemplateTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
