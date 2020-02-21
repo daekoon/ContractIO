@@ -9,6 +9,8 @@
     <%= link_to edit_contract_path(@contract.id) do %>
         <button type="button" class="btn btn-success">Print</button>
     <% end %>
+
+    <button type="button" class="btn btn-success">Add Clause</button>
 </div>
 <center><h1><%= @contract.name %></h1></center>
 
@@ -18,3 +20,9 @@
 <div>Borrower Name: <%= @contract.borrower_name %> </div>
 <div>Lender Address: <%= @contract.lender_address %> </div>
 <div>Loan Amount: <%= @contract.loan_amount %> </div>
+
+
+<% @clauses.each do |clause| %>
+    <p><%= clause.text %></p>
+    <button>delete <%= clause.id %></button>
+<% end %>

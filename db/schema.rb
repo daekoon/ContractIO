@@ -10,14 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_20_225009) do
+ActiveRecord::Schema.define(version: 2020_02_21_070314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "clauses", force: :cascade do |t|
+    t.string "name"
+    t.string "tags", array: true
+    t.string "text"
+  end
+
   create_table "contracts", force: :cascade do |t|
     t.string "name"
     t.bigint "user_id"
+    t.string "lender_address"
+    t.string "borrower_name"
+    t.string "lender_name"
+    t.string "borrower_address"
+    t.bigint "loan_amount"
+    t.integer "clauses", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "created_at"], name: "index_contracts_on_user_id_and_created_at"
@@ -27,9 +39,9 @@ ActiveRecord::Schema.define(version: 2020_02_20_225009) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "password_digest"
   end
 
   add_foreign_key "contracts", "users"

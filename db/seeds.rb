@@ -7,3 +7,6 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create([{name: 'test', email: 'test@test.com', password_digest: '$2y$12$i6QC/oDJysiksLh/y62RAetjheNo6sSZ5D6S5xILdWdiCl0uBIVVy'}])
+
+
+Clause.create([{name: 'test', tags: ['loans'], text: 'test 123'}])

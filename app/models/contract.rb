@@ -5,6 +5,7 @@
 #  id               :bigint           not null, primary key
 #  borrower_address :string
 #  borrower_name    :string
+#  clauses          :integer          default("{}"), is an Array
 #  lender_address   :string
 #  lender_name      :string
 #  loan_amount      :bigint
