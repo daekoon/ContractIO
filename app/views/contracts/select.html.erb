@@ -1,4 +1,31 @@
-<h1> Select a type of contract </h1>
 
-<li><h3><%= link_to "Loans", '/contracts/new' %></h3></li>
-<li><h3><%= link_to "Sales", '#' %></h3></li>
+
+
+<div>
+    <div class="page-header"><h1> Select a type of contract </h1></div>
+    <div class="row is-flex">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="box text-center thumbnail">
+                <div class="box text-center caption">
+                    <%= link_to '/contracts/new' do %>
+                        <img src="/house.png"/>
+                        <h3>Loans</h3>
+                    <% end %>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="box text-center thumbnail">
+                <div class="box text-center caption">
+                    <%= link_to '/contracts/new' do %>
+                        <img src="/house.png"/>
+                        <h3>Sales</h3>
+                    <% end %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

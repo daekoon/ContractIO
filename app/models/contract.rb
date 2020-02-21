@@ -2,11 +2,25 @@
 #
 # Table name: contracts
 #
-#  id         :bigint           not null, primary key
-#  name       :string
-#  user_id    :bigint
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id               :bigint           not null, primary key
+#  borrower_address :string
+#  borrower_name    :string
+#  lender_address   :string
+#  lender_name      :string
+#  loan_amount      :bigint
+#  name             :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  user_id          :bigint
+#
+# Indexes
+#
+#  index_contracts_on_user_id                 (user_id)
+#  index_contracts_on_user_id_and_created_at  (user_id,created_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #
 class Contract < ApplicationRecord
   belongs_to :user

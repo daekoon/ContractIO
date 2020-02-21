@@ -18,6 +18,7 @@
 
             <% if logged_in? %>
               <li><%= link_to "Contracts", user_path(current_user) %></li>
+              <li><%= link_to "New Contract", '/contracts/select' %></li>
               <li><%= link_to "Log out", logout_path, method: :delete %></li>
             <% else %>
               <li><%= link_to "Log in", login_path %></li>

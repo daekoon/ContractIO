@@ -9,12 +9,10 @@
     </section>
   </aside>
   <div class="col-md-8">
-    <% if @user.contracts.any? %>
       <h3>Contracts (<%= @user.contracts.count %>)</h3>
       <ol class="contracts">
         <%= render @contracts %>
       </ol>
       <%= will_paginate @contracts %>
-    <% end %>
   </div>
 </div>
