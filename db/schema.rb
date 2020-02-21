@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_21_172136) do
+ActiveRecord::Schema.define(version: 2020_02_21_192757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2020_02_21_172136) do
     t.datetime "updated_at", null: false
     t.string "merge_tags", default: [], array: true
     t.string "explanation_text"
+    t.string "tag"
   end
 
   create_table "clauses", force: :cascade do |t|
@@ -42,6 +43,8 @@ ActiveRecord::Schema.define(version: 2020_02_21_172136) do
     t.integer "clauses", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "loan_duration"
+    t.float "interest_rate"
     t.index ["user_id", "created_at"], name: "index_contracts_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_contracts_on_user_id"
   end

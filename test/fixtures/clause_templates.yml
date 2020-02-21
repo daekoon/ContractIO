@@ -6,6 +6,7 @@
 #  explanation_text :string
 #  merge_tags       :string           default("{}"), is an Array
 #  name             :string
+#  tag              :string
 #  text             :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

@@ -6,6 +6,7 @@
 #  explanation_text :string
 #  merge_tags       :string           default("{}"), is an Array
 #  name             :string
+#  tag              :string
 #  text             :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -22,8 +23,8 @@ class ClauseTemplate < ApplicationRecord
 
     counter = 0
     merge_tags.each do |tag|
-      regex = Regexp.new(tag)
-      replaced_text.gsub(regex, parameters[counter])
+      regex = Regexp.new(tag.to_s)
+      replaced_text = replaced_text.gsub(regex, parameters[counter])
       counter += 1
     end
 

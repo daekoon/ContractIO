@@ -24,14 +24,14 @@
       <%= label_tag(:lender_name, "Lender name:") %>
       <%= text_field_tag(:lender_name) %>
 
-      <%= label_tag(:loan_amount, "Loan amount:") %>
+      <%= label_tag(:loan_amount, "Loan amount (in SGD):") %>
       <%= text_field_tag(:loan_amount) %>
 
-      <%= label_tag(:loan_term, "Loan duration (in months):") %>
-      <%= text_field_tag(:loan_term) %>
+      <%= label_tag(:loan_duration, "Loan duration (in months):") %>
+      <%= text_field_tag(:loan_duration) %>
 
-      <%= label_tag(:interest_rate, "Loan interest rate (in percentage):") %>
-      <%= text_field_tag(:loan_term) %>
+      <%= label_tag(:interest_rate, "Annual loan interest rate (in percentage):") %>
+      <%= text_field_tag(:interest_rate) %>
 
       <%= submit_tag("Create") %>
     <% end %>

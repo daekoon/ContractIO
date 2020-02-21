@@ -33,6 +33,8 @@ class ContractsController < ApplicationController
     contract.borrower_name = params[:borrower_name]
     contract.lender_name = params[:lender_name]
     contract.loan_amount = params[:loan_amount]
+    contract.interest_rate = params[:interest_rate]
+    contract.loan_duration = params[:loan_duration]
     contract.user = current_user
 
     contract.save!
@@ -50,10 +52,49 @@ class ContractsController < ApplicationController
     contract.borrower_name = params[:borrower_name]
     contract.lender_name = params[:lender_name]
     contract.loan_amount = params[:loan_amount]
+    contract.interest_rate = params[:interest_rate]
+    contract.loan_duration = params[:loan_duration]
     contract.user = current_user
-    contract.clauses = [1]
+
+    generate_clauses(contract)
 
     contract.save!
     redirect_to contract_path(contract.id)
+  end
+
+  private
+
+  def generate_clauses(contract)
+    all_clauses = []
+    base_template = ClauseTemplate.find_by(name: 'loan_base')
+    parameters = [contract.lender_name, contract.borrower_name, contract.lender_address,
+                  contract.borrower_address]
+    text = base_template.replace_merge_tags(parameters)
+    clause = Clause.create(text: text, name: contract.name + 'loan_base',
+                           explanation_text: base_template.explanation_text)
+    all_clauses << clause.id
+
+    template = ClauseTemplate.find_by(name: 'loan_amount')
+    parameters = ['%d' % [contract.loan_amount]]
+    text = template.replace_merge_tags(parameters)
+    clause = Clause.create(text: text, name: contract.name + 'loan_amount',
+                           explanation_text: template.explanation_text)
+    all_clauses << clause.id
+
+    template = ClauseTemplate.find_by(name: 'loan_term')
+    parameters = ['%d' % [contract.loan_duration]]
+    text = template.replace_merge_tags(parameters)
+    clause = Clause.create(text: text, name: contract.name + 'loan_duration',
+                           explanation_text: template.explanation_text)
+    all_clauses << clause.id
+
+    template = ClauseTemplate.find_by(name: 'interest_rate')
+    parameters = ['%0.2f' % [contract.interest_rate]]
+    text = template.replace_merge_tags(parameters)
+    clause = Clause.create(text: text, name: contract.name + 'interest_rate',
+                           explanation_text: template.explanation_text)
+    all_clauses << clause.id
+
+    contract.update_attribute(:clauses, all_clauses)
   end
 end
