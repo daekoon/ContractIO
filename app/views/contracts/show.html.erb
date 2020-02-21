@@ -14,15 +14,13 @@
 </div>
 <center><h1><%= @contract.name %></h1></center>
 
-
-
 <div>Lender Name: <%= @contract.lender_name %> </div>
 <div>Borrower Name: <%= @contract.borrower_name %> </div>
 <div>Lender Address: <%= @contract.lender_address %> </div>
 <div>Loan Amount: <%= @contract.loan_amount %> </div>
 
-
+<h2> Delete clause</h2>
 <% @clauses.each do |clause| %>
-    <p><%= clause.text %></p>
-    <button>delete <%= clause.id %></button>
+    <p>Clause: <%= clause.text %></p>
+    <button>delete clause</button>
 <% end %>

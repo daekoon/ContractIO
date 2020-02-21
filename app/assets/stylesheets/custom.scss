@@ -88,6 +88,15 @@ input {
   height: auto !important;
 }
 
+input[type=radio] {
+  width: auto;
+}
+
+input[type=radio] ~ label {
+  width: 95%;
+}
+
+
 /* sidebar */
 
 aside {

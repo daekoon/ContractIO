@@ -7,10 +7,11 @@
       <%= label_tag(:name, "Contract name:") %>
       <%= text_field_tag(:name) %>
 
-      <%= label_tag(:language, "Preferred language for agreement") %>
-      <%= radio_button_tag(:language, "english") %>
-      <%= label_tag(:language_english, "English") %>
-
+      <%= label_tag(:language, "Preferred language for agreement") %></br>
+      <%= radio_button_tag(:language, "english") %><%= label_tag(:language_english, "English") %>
+      <%= radio_button_tag(:language, "chinese") %><%= label_tag(:language_chinese, "Chinese") %>
+      <%= radio_button_tag(:language, "tamil") %><%= label_tag(:language_tamil, "Tamil") %>
+      </br></br>
       <%= label_tag(:lender_address, "Lender address") %>
       <%= text_field_tag(:lender_address) %>
 
@@ -25,6 +26,12 @@
 
       <%= label_tag(:loan_amount, "Loan amount:") %>
       <%= text_field_tag(:loan_amount) %>
+
+      <%= label_tag(:loan_term, "Loan duration (in months):") %>
+      <%= text_field_tag(:loan_term) %>
+
+      <%= label_tag(:interest_rate, "Loan interest rate (in percentage):") %>
+      <%= text_field_tag(:loan_term) %>
 
       <%= submit_tag("Create") %>
     <% end %>
