@@ -6,7 +6,7 @@
     <button type="button" class="btn btn-primary">Edit</button>
   <% end %>
 
-  <%= link_to edit_contract_path(@contract.id) do %>
+  <%= link_to '/contracts/' + @contract.id.to_s + '/printable' do %>
     <button type="button" class="btn btn-success">Generate</button>
   <% end %>
 

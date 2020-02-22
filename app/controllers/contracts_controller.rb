@@ -1,3 +1,5 @@
+include ActionView::Helpers::TextHelper
+
 class ContractsController < ApplicationController
 
   def new
@@ -8,7 +10,27 @@ class ContractsController < ApplicationController
 
   end
 
+  def explain
+
+  end
+
+  def explained
+    @explained = simple_format params[:text]
+    Term.find_each do |term|
+        @explained.gsub! term.text, '<a href="/terms/' + term.id.to_s + '">' + term.text + "</a>"
+    end
+  end
+
   def show
+    @contract = Contract.find(params[:id])
+
+    @clauses = []
+    @contract.clauses.each do |id|
+        @clauses << Clause.find(id);
+    end
+  end
+
+  def printable
     @contract = Contract.find(params[:id])
 
     @clauses = []

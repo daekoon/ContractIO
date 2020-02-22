@@ -23,3 +23,9 @@ ClauseTemplate.create(name: 'prepayment', text: 'Prepayment. Borrower will not b
 ClauseTemplate.create(name: 'default', text: 'Default (failure to fulfill an obligation). If Borrower defaults on its payments and fails to cure said default within a reasonable amount of time, Lender will have the option to declare the entire remaining amount of Principal and any accrued Interest immediately due and payable.', merge_tags: [], explanation_text: 'Defaulting is when the borrower fails to pay back the lender by the due date, or when he misses his recurring payment. This clause states that the lender will have the ability to make the borrower pay up the full amount when that happens.')
 
 Clause.create([{name: 'test', tags: ['loans'], text: 'test 123'}])
+
+
+Term.create(text: 'Default', explanation: "Failure to fulfill an obligation.")
+Term.create(text: 'Representations and Warranties', explanation: "Statement of fact made to enter into contract.")
+Term.create(text: 'Severability', explanation: "Cancelling of certain terms which may be invalid.")
+Term.create(text: 'Waiver', explanation: "Voluntarily surrendering a right or privilege.")

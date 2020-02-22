@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: terms
+#
+#  id          :bigint           not null, primary key
+#  explanation :string
+#  text        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
+one:
+  text: MyString
+  explanation: MyString
+
+two:
+  text: MyString
+  explanation: MyString

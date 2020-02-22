@@ -1,0 +1,24 @@
+<% provide(:title, @contract.name) %>
+
+<div class="input-group">
+
+  <%= link_to contract_path(@contract.id) do %>
+    <button type="button" class="btn btn-primary">Back</button>
+  <% end %>
+
+    <button type="button" class="btn btn-success">Print</button>
+</div>
+<center><h1>LOAN AGREEMENT</center>
+
+
+<p>This Loan Agreement (the “<b>Agreement</b>”) is entered into on  ____________________ (the "<b>Effective Date</b>), by and between <%= @contract.lender_name %>, with an address of <%= @contract.lender_address %> (the “Lender”) and <%= @contract.borrower_name %>, with an address of <%= @contract.borrower_address %>, (the “<b>Borrower</b>”), collectively “<b>the Parties.</b>”</p>
+
+<p>WHEREAS, Borrower desires to borrow a fixed amount of money; and</p>
+<p>WHEREAS, Lender agrees to lend a fixed amount of money;</p></p>
+<p>IN CONSIDERATION of, the mutual promises, covenants, and conditions contained herein, the Parties agree as follows:</p>
+
+<ol>
+    <% @clauses.each do |clause| %>
+    <li><%= clause.text %></li>
+    <% end %>
+</ol>

@@ -1,0 +1,10 @@
+<% provide(:title, 'Explain Contract') %>
+<h1>Explain Contract</h1>
+
+<div> Insert contract text: </div>
+  <%= form_tag('/contracts/explained', :method => "post") do %>
+    <textarea id="text" name="text">
+
+    </textarea>
+    <button type="submit" id="explain">Explain</button>
+  <% end %>
