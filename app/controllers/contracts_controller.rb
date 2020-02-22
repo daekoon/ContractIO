@@ -158,6 +158,21 @@ class ContractsController < ApplicationController
                            explanation_text: template.explanation_text)
     all_clauses << clause.id
     contract.update_attribute(:clauses, all_clauses)
+  def newclause
+    contract = Contract.find(params[:id])
+    newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid],
+                             explanation_text: params[:newexplanation])
+    newclause.save!
+    contract.clauses << newclause.id
+    contract.save!
+    redirect_to contract_path(contract.id)
+  end
+
+  def deleteclause
+    contract = Contract.find(params[:id])
+    clause = Clause.delete(params[:clauseid])
+    contract.clauses.delete_at(params[:contractclauseid].to_i - 1)
+
     contract.save!
     redirect_to contract_path(contract.id)
   end
