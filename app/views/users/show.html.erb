@@ -8,6 +8,9 @@
       </h1>
     </section>
   </aside>
+    <%= link_to 'contracts/upload' do %>
+    <button type="button" class="btn btn-primary">Upload Contract</button>
+  <% end %>
   <div class="col-md-8">
       <h3>Contracts (<%= @user.contracts.count %>)</h3>
       <ol class="contracts">

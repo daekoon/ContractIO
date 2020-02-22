@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   post '/contracts/generate', to: 'contracts#generate'
   post '/contracts/edit', to: 'contracts#editpost'
   get '/contracts/:id/printable', to: 'contracts#printable'
+  get 'users/contracts/upload', to: 'contracts#upload'
+  post 'users/contracts/upload_file', to: 'contracts#upload_file'
   resources :contracts, only: [:show, :create, :new, :edit]
 
 
