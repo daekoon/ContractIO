@@ -43,8 +43,27 @@
         <td><%= counter %></td>
         <td><%= clause.text %></td>
         <td><%= clause.explanation_text %></td>
-        <td><button>Delete</button></td>
+        <td>
+          <%= form_tag('/contracts/deleteclause', :method => "post") do %>
+          <%= hidden_field_tag :id, @contract.id %>
+          <%= hidden_field_tag :clauseid, clause.id %>
+          <%= hidden_field_tag :contractclauseid, counter %>
+          <button type="submit">Delete</button>
+          <% end %>
+        </td>
       </tr>
+
+    <% end %>
+    <% counter += 1 %>
+    <%= form_tag('/contracts/newclause', :method => "post") do %>
+    <%= hidden_field_tag :id, @contract.id %>
+    <%= hidden_field_tag :newclauseid, counter %>
+    <tr>
+      <td> <%= counter %> </td>
+      <td> <%= text_field_tag(:newtext) %> </td>
+      <td> <%= text_field_tag(:newexplanation) %> </td>
+      <td><button type="submit">Add</button></td>
+    </tr>
     <% end %>
   </tbody>
 </table>

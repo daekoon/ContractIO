@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post '/contracts/explained', to: 'contracts#explained'
   post '/contracts/generate', to: 'contracts#generate'
   post '/contracts/edit', to: 'contracts#editpost'
+  post '/contracts/newclause', to: 'contracts#newclause'
+  post '/contracts/deleteclause', to: 'contracts#deleteclause'
   get '/contracts/:id/printable', to: 'contracts#printable'
   resources :contracts, only: [:show, :create, :new, :edit]
 
