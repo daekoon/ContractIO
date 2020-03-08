@@ -21,7 +21,7 @@ class ContractsController < ApplicationController
   def explained
     @explained = simple_format params[:text]
     Term.find_each do |term|
-        @explained.gsub! term.text, '<a href="/terms/' + term.id.to_s + '">' + term.text + "</a>"
+      @explained.gsub! /#{term.text}/i, '<a href="/terms/' + term.id.to_s + '">' + term.text + "</a>"
     end
   end
 
@@ -156,12 +156,18 @@ class ContractsController < ApplicationController
     text = template.replace_merge_tags([])
     clause = Clause.create(text: text, name: contract.name + 'prepayment',
                            explanation_text: template.explanation_text)
+
     all_clauses << clause.id
     contract.update_attribute(:clauses, all_clauses)
+
+    sleep 4
+
+    redirect_to contract_path(contract.id)
+
+  end
   def newclause
     contract = Contract.find(params[:id])
-    newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid],
-                             explanation_text: params[:newexplanation])
+    newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid], explanation_text: params[:newexplanation])
     newclause.save!
     contract.clauses << newclause.id
     contract.save!
@@ -211,6 +217,12 @@ class ContractsController < ApplicationController
     parameters = ['%0.2f' % [contract.interest_rate]]
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'interest_rate',
+                           explanation_text: template.explanation_text)
+    all_clauses << clause.id
+
+    template = ClauseTemplate.find_by(name: 'legally_binding')
+    text = template.replace_merge_tags([])
+    clause = Clause.create(text: text, name: contract.name + 'legally_binding',
                            explanation_text: template.explanation_text)
     all_clauses << clause.id
 

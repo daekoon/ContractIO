@@ -22,6 +22,8 @@ ClauseTemplate.create(name: 'prepayment', text: 'Prepayment. Borrower will not b
 
 ClauseTemplate.create(name: 'default', text: 'Default (failure to fulfill an obligation). If Borrower defaults on its payments and fails to cure said default within a reasonable amount of time, Lender will have the option to declare the entire remaining amount of Principal and any accrued Interest immediately due and payable.', merge_tags: [], explanation_text: 'Defaulting is when the borrower fails to pay back the lender by the due date, or when he misses his recurring payment. This clause states that the lender will have the ability to make the borrower pay up the full amount when that happens.')
 
+ClauseTemplate.create(name: 'legally_binding', text: 'Legal and Binding Agreement. This Agreement is legal and binding between the Parties as stated above. The Parties each represent that they have the authority to enter into this Agreement.', merge_tags: [], explanation_text: 'This clause ensures that this contract is legally enforceable.')
+
 Clause.create([{name: 'test', tags: ['loans'], text: 'test 123'}])
 
 
