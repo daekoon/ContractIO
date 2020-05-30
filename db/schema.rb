@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_22_050625) do
+ActiveRecord::Schema.define(version: 2020_05_30_141441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2020_02_22_050625) do
     t.integer "loan_duration"
     t.float "interest_rate"
     t.string "contract_type"
+    t.json "data", default: {}
     t.index ["user_id", "created_at"], name: "index_contracts_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_contracts_on_user_id"
   end

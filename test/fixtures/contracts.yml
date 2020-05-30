@@ -7,6 +7,7 @@
 #  borrower_name    :string
 #  clauses          :integer          default("{}"), is an Array
 #  contract_type    :string
+#  data             :json
 #  interest_rate    :float
 #  lender_address   :string
 #  lender_name      :string

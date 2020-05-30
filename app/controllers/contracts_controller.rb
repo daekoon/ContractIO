@@ -34,6 +34,14 @@ class ContractsController < ApplicationController
     end
   end
 
+  def generatepdf
+    pdf = PdfGenerator.generate(Contract.find(params[:id]))
+    send_data pdf.render,
+      filename: "contract.pdf",
+      type: "application/pdf",
+      disposition: "inline"
+  end
+
   def printable
     @contract = Contract.find(params[:id])
 
@@ -84,6 +92,11 @@ class ContractsController < ApplicationController
     contract.interest_rate = params[:interest_rate]
     contract.loan_duration = params[:loan_duration]
     contract.user = current_user
+    
+    # Populate the data JSON
+    data = {}
+    data[:lender_address] = params[:lender_address]
+
 
     generate_clauses(contract)
 

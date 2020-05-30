@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   post '/contracts/edit', to: 'contracts#editpost'
   post '/contracts/newclause', to: 'contracts#newclause'
   post '/contracts/deleteclause', to: 'contracts#deleteclause'
+  get '/contracts/:id/generatepdf', to: 'contracts#generatepdf'
   get '/contracts/:id/printable', to: 'contracts#printable'
   get 'users/contracts/upload', to: 'contracts#upload'
   post 'users/contracts/upload_file', to: 'contracts#upload_file'

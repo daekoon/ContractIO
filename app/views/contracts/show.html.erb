@@ -11,6 +11,9 @@
   <% end %>
 
   <button type="button" class="btn btn-success">Add Clause</button>
+  <%= link_to '/contracts/' + @contract.id.to_s + '/generatepdf' do %>
+    <button type="button" class="btn btn-success">Generate</button>
+  <% end %>
 </div>
 <center><h1><%= @contract.name %></h1></center>
 <h2>Contract Details</h2>
