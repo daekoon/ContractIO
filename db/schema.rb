@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_30_141441) do
+ActiveRecord::Schema.define(version: 2020_06_03_155033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 2020_05_30_141441) do
     t.string "tags", array: true
     t.string "text"
     t.string "explanation_text"
+    t.boolean "custom"
+    t.string "template_name"
   end
 
   create_table "contracts", force: :cascade do |t|

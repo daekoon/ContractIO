@@ -1,6 +1,7 @@
 include ActionView::Helpers::TextHelper
 
 require 'digest/md5'
+require 'pdf-reader'
 
 class ContractsController < ApplicationController
 
@@ -35,7 +36,8 @@ class ContractsController < ApplicationController
   end
 
   def generatepdf
-    pdf = PdfGenerator.generate(Contract.find(params[:id]))
+    pdf = PdfGenerator.new(Contract.find(params[:id]))
+    pdf.generate()
     send_data pdf.render,
       filename: "contract.pdf",
       type: "application/pdf",
@@ -60,18 +62,30 @@ class ContractsController < ApplicationController
 
   def editpost
     contract = Contract.find(params[:id])
-
+    data = contract.data
     contract.name = params[:name]
+    data[:name] = params[:name]
     contract.lender_address = params[:lender_address]
+    data[:lender_address] = params[:lender_address]
     contract.borrower_address = params[:borrower_address]
+    data[:borrower_address] = params[:borrower_address]
     contract.borrower_name = params[:borrower_name]
+    data[:borrower_name] = params[:borrower_name]
     contract.lender_name = params[:lender_name]
+    data[:lender_name] = params[:lender_name]
     contract.loan_amount = params[:loan_amount]
+    data[:loan_amount] = params[:loan_amount]
     contract.interest_rate = params[:interest_rate]
+    data[:interest_rate] = params[:interest_rate]
     contract.loan_duration = params[:loan_duration]
+    data[:loan_duration] = params[:loan_duration]
     contract.user = current_user
 
     generate_clauses(contract)
+    contract.data = data
+    store_clauses_as_data(contract)
+
+    
 
     contract.save!
     redirect_to contract_path(contract.id)
@@ -81,24 +95,35 @@ class ContractsController < ApplicationController
     # For now this is hard coded to create loan contract only
     # Refactor in the future if we decide to work further on this
     contract = Contract.new
-    contract.contract_type = 'Loan'
-
-    contract.name = params[:name]
-    contract.lender_address = params[:lender_address]
-    contract.borrower_address = params[:borrower_address]
-    contract.borrower_name = params[:borrower_name]
-    contract.lender_name = params[:lender_name]
-    contract.loan_amount = params[:loan_amount]
-    contract.interest_rate = params[:interest_rate]
-    contract.loan_duration = params[:loan_duration]
-    contract.user = current_user
-    
-    # Populate the data JSON
     data = {}
-    data[:lender_address] = params[:lender_address]
+    contract.contract_type = 'Loan'
+    data[:contract_type] = 'Loan'
 
+    # Common data
+    contract.name = params[:name]
+    data[:name] = params[:name]
+
+    # Non common data
+    contract.lender_address = params[:lender_address]
+    data[:lender_address] = params[:lender_address]
+    contract.borrower_address = params[:borrower_address]
+    data[:borrower_address] = params[:borrower_address]
+    contract.borrower_name = params[:borrower_name]
+    data[:borrower_name] = params[:borrower_name]
+    contract.lender_name = params[:lender_name]
+    data[:lender_name] = params[:lender_name]
+    contract.loan_amount = params[:loan_amount]
+    data[:loan_amount] = params[:loan_amount]
+    contract.interest_rate = params[:interest_rate]
+    data[:interest_rate] = params[:interest_rate]
+    contract.loan_duration = params[:loan_duration]
+    data[:loan_duration] = params[:loan_duration]
+    contract.user = current_user
+
+    contract.data = data
 
     generate_clauses(contract)
+    store_clauses_as_data(contract)
 
     contract.save!
     redirect_to contract_path(contract.id)
@@ -109,78 +134,20 @@ class ContractsController < ApplicationController
   end
 
   def upload_file
-
-    if params[:upload][:datafile] != "Tom Harry Loan Contract.pdf"
-      raise "Unable to process file."
+    if File.extname(params[:file].tempfile) != ".pdf"
+      raise "Unsupported file type"
     end
-
-    contract = Contract.new
-    contract.contract_type = 'Loan'
-
-    contract.name = 'Tom Harry Loan Contract'
-    contract.lender_address = '123 Bukit Timah Road'
-    contract.borrower_address = '456 Tampines Rd'
-    contract.borrower_name = 'Harry'
-    contract.lender_name = 'Tom'
-    contract.loan_amount = '10000'
-    contract.interest_rate = 5
-    contract.loan_duration = 12
-    contract.user = current_user
-
-    all_clauses = []
-    base_template = ClauseTemplate.find_by(name: 'loan_base')
-    parameters = [contract.lender_name, contract.borrower_name, contract.lender_address,
-                  contract.borrower_address]
-    text = base_template.replace_merge_tags(parameters)
-    clause = Clause.create(text: text, name: contract.name + 'loan_base',
-                           explanation_text: base_template.explanation_text)
-    all_clauses << clause.id
-
-    template = ClauseTemplate.find_by(name: 'loan_amount')
-    parameters = ['%d' % [contract.loan_amount]]
-    text = template.replace_merge_tags(parameters)
-    clause = Clause.create(text: text, name: contract.name + 'loan_amount',
-                           explanation_text: template.explanation_text)
-    all_clauses << clause.id
-
-
-
-    template = ClauseTemplate.find_by(name: 'interest_rate')
-    parameters = ['%0.2f' % [contract.interest_rate]]
-    text = template.replace_merge_tags(parameters)
-    clause = Clause.create(text: text, name: contract.name + 'interest_rate',
-                           explanation_text: template.explanation_text)
-    all_clauses << clause.id
-
-    template = ClauseTemplate.find_by(name: 'loan_term')
-    parameters = ['%d' % [contract.loan_duration]]
-    text = template.replace_merge_tags(parameters)
-    clause = Clause.create(text: text, name: contract.name + 'loan_duration',
-                           explanation_text: template.explanation_text)
-    all_clauses << clause.id
-
-    template = ClauseTemplate.find_by(name: 'loan_term')
-    parameters = ['%d' % [contract.loan_duration]]
-    text = template.replace_merge_tags(parameters)
-    clause = Clause.create(text: text, name: contract.name + 'loan_duration',
-                           explanation_text: template.explanation_text)
-
-    template = ClauseTemplate.find_by(name: 'prepayment')
-    text = template.replace_merge_tags([])
-    clause = Clause.create(text: text, name: contract.name + 'prepayment',
-                           explanation_text: template.explanation_text)
-
-    all_clauses << clause.id
-    contract.update_attribute(:clauses, all_clauses)
-
-    sleep 4
-
-    redirect_to contract_path(contract.id)
-
+    reader = PDF::Reader.new(params[:file].tempfile)
+    data = reader.info
+    if data[:contract_type] == "Loan"
+      id = upload_loan_contract(data)
+    end
+    redirect_to contract_path(id)
   end
+
   def newclause
     contract = Contract.find(params[:id])
-    newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid], explanation_text: params[:newexplanation])
+    newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid], explanation_text: params[:newexplanation], custom: true)
     newclause.save!
     contract.clauses << newclause.id
     contract.save!
@@ -200,7 +167,11 @@ class ContractsController < ApplicationController
 
   def generate_clauses(contract)
     contract.clauses.each do |clause|
-      Clause.find(clause).destroy
+      current_clause = Clause.find(clause)
+      # Only destroy template clauses when you edit
+      unless current_clause.custom
+        current_clause.destroy
+      end
     end
 
     all_clauses = []
@@ -209,36 +180,106 @@ class ContractsController < ApplicationController
                   contract.borrower_address]
     text = base_template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'loan_base',
-                           explanation_text: base_template.explanation_text)
+                           explanation_text: base_template.explanation_text,
+                           template_name: base_template.name, custom: false)
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'loan_amount')
     parameters = ['%d' % [contract.loan_amount]]
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'loan_amount',
-                           explanation_text: template.explanation_text)
+                           explanation_text: template.explanation_text,
+                           template_name: base_template.name, custom: false)
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'loan_term')
     parameters = ['%d' % [contract.loan_duration]]
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'loan_duration',
-                           explanation_text: template.explanation_text)
+                           explanation_text: template.explanation_text,
+                           template_name: base_template.name, custom: false)
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'interest_rate')
     parameters = ['%0.2f' % [contract.interest_rate]]
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'interest_rate',
-                           explanation_text: template.explanation_text)
+                           explanation_text: template.explanation_text,
+                           template_name: base_template.name, custom: false)
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'legally_binding')
     text = template.replace_merge_tags([])
     clause = Clause.create(text: text, name: contract.name + 'legally_binding',
-                           explanation_text: template.explanation_text)
+                           explanation_text: template.explanation_text,
+                           template_name: base_template.name, custom: false)
     all_clauses << clause.id
 
     contract.update_attribute(:clauses, all_clauses)
+  end
+
+  def store_clauses_as_data(contract)
+    clauses = {}
+    count = 1
+    contract.clauses.each do |c|
+      current_clause = Clause.find(c)
+      clauses[count.to_s] = {
+        "custom" => current_clause.custom,
+        "template_name" => current_clause.template_name,
+        "text" => current_clause.text,
+        "explanation_text" => current_clause.explanation_text,
+        "name" => current_clause.name
+      }
+      count += 1
+    end 
+    new_data = contract.data
+    new_data["clauses"] = clauses.to_json
+    contract.update_attribute(:data, new_data)
+    contract.save
+
+  end
+
+  def upload_loan_contract(data)
+    contract = Contract.new
+    contract.name = data[:name]
+    contract.contract_type = 'Loan'
+    contract.data = data
+
+    all_clauses = []
+    
+    contract.lender_address = data[:lender_address]
+    contract.borrower_address = data[:borrower_address]
+    contract.borrower_name = data[:borrower_name]
+    contract.lender_name = data[:lender_name]
+    contract.loan_amount = data[:loan_amount]
+    contract.interest_rate = data[:interest_rate]
+    contract.loan_duration = data[:loan_duration]
+    contract.user = current_user
+
+    json_hash = JSON.parse(data[:clauses])
+
+    json_hash.each do |clause_data|
+      #if clause_data["custom"]
+      #  newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+      #  newclause.save!
+      #  all_clauses << newclause
+      #else
+      #  template = ClauseTemplate.find_by(name: clause_data["template_name"])
+      #  if template.nil?
+      #    newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+      #    newclause.save!
+      #    all_clauses << newclause
+      #  else
+      #    
+      #  end
+      #end
+      newclause = Clause.create(text: clause_data[1]["text"], name: clause_data[1]["name"], explanation_text: clause_data[1]["explanation_text"], custom: true)
+      newclause.save!
+      all_clauses << newclause.id
+    end
+
+    contract.clauses = all_clauses
+    contract.save!
+    contract.id
   end
 end

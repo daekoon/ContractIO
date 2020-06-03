@@ -1,6 +1,6 @@
 <h1>File Upload</h1>
-<%= form_tag('upload_file') do %>
-<p><label for="upload_file">Select File</label>
-<%= file_field 'upload', 'datafile' %></p>
-<%= submit_tag "Upload" %>
+
+<%= form_with(url: {action: :upload_file}, multipart: true) do %>
+  <%= file_field_tag 'file', :accept => 'application/pdf' %>
+  <%= submit_tag "Upload" %>
 <% end %>

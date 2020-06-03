@@ -32,6 +32,7 @@ gem 'will_paginate'
 gem 'annotate'
 
 gem 'prawn'
+gem 'pdf-reader'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
