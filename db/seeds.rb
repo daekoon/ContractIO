@@ -7,6 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create([{name: 'test', email: 'test@test.com', password: 'test', password_confirmation: 'test'}])
+User.create([{name: 'test2', email: 'test2@test.com', password: 'test', password_confirmation: 'test'}])
 
 ClauseTemplate.create(name: 'loan_amount', text: 'Loan Amount. The Parties agree the Lender will loan the Borrower ${loan_amount} (the “Loan”).', merge_tags: ['{loan_amount}'], explanation_text: 'This clause simply states the amount of money loaned.', tag: 'loan_default')
 
