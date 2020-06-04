@@ -81,9 +81,9 @@ class ContractsController < ApplicationController
     data[:loan_duration] = params[:loan_duration]
     contract.user = current_user
 
-    generate_clauses(contract)
+    all_parameters = generate_clauses(contract)
     contract.data = data
-    store_clauses_as_data(contract)
+    store_clauses_as_data(contract, all_parameters)
 
     
 
@@ -122,8 +122,8 @@ class ContractsController < ApplicationController
 
     contract.data = data
 
-    generate_clauses(contract)
-    store_clauses_as_data(contract)
+    all_parameters = generate_clauses(contract)
+    store_clauses_as_data(contract, all_parameters)
 
     contract.save!
     redirect_to contract_path(contract.id)
@@ -166,11 +166,14 @@ class ContractsController < ApplicationController
   private
 
   def generate_clauses(contract)
+    all_parameters = {}
     contract.clauses.each do |clause|
       current_clause = Clause.find(clause)
       # Only destroy template clauses when you edit
       unless current_clause.custom
         current_clause.destroy
+      else
+
       end
     end
 
@@ -182,6 +185,7 @@ class ContractsController < ApplicationController
     clause = Clause.create(text: text, name: contract.name + 'loan_base',
                            explanation_text: base_template.explanation_text,
                            template_name: base_template.name, custom: false)
+    all_parameters[clause.id] = parameters
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'loan_amount')
@@ -189,7 +193,8 @@ class ContractsController < ApplicationController
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'loan_amount',
                            explanation_text: template.explanation_text,
-                           template_name: base_template.name, custom: false)
+                           template_name: template.name, custom: false)
+    all_parameters[clause.id] = parameters
     all_clauses << clause.id
 
     template = ClauseTemplate.find_by(name: 'loan_term')
@@ -197,28 +202,32 @@ class ContractsController < ApplicationController
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'loan_duration',
                            explanation_text: template.explanation_text,
-                           template_name: base_template.name, custom: false)
+                           template_name: template.name, custom: false)
     all_clauses << clause.id
+    all_parameters[clause.id] = parameters
 
     template = ClauseTemplate.find_by(name: 'interest_rate')
     parameters = ['%0.2f' % [contract.interest_rate]]
     text = template.replace_merge_tags(parameters)
     clause = Clause.create(text: text, name: contract.name + 'interest_rate',
                            explanation_text: template.explanation_text,
-                           template_name: base_template.name, custom: false)
+                           template_name: template.name, custom: false)
     all_clauses << clause.id
+    all_parameters[clause.id] = parameters
 
     template = ClauseTemplate.find_by(name: 'legally_binding')
     text = template.replace_merge_tags([])
     clause = Clause.create(text: text, name: contract.name + 'legally_binding',
                            explanation_text: template.explanation_text,
-                           template_name: base_template.name, custom: false)
+                           template_name: template.name, custom: false)
     all_clauses << clause.id
+    all_parameters[clause.id] = parameters
 
     contract.update_attribute(:clauses, all_clauses)
+    all_parameters
   end
 
-  def store_clauses_as_data(contract)
+  def store_clauses_as_data(contract, all_parameters)
     clauses = {}
     count = 1
     contract.clauses.each do |c|
@@ -228,7 +237,8 @@ class ContractsController < ApplicationController
         "template_name" => current_clause.template_name,
         "text" => current_clause.text,
         "explanation_text" => current_clause.explanation_text,
-        "name" => current_clause.name
+        "name" => current_clause.name,
+        "parameters" => all_parameters[current_clause.id]
       }
       count += 1
     end 
@@ -258,24 +268,26 @@ class ContractsController < ApplicationController
 
     json_hash = JSON.parse(data[:clauses])
 
-    json_hash.each do |clause_data|
-      #if clause_data["custom"]
-      #  newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
-      #  newclause.save!
-      #  all_clauses << newclause
-      #else
-      #  template = ClauseTemplate.find_by(name: clause_data["template_name"])
-      #  if template.nil?
-      #    newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
-      #    newclause.save!
-      #    all_clauses << newclause
-      #  else
-      #    
-      #  end
-      #end
-      newclause = Clause.create(text: clause_data[1]["text"], name: clause_data[1]["name"], explanation_text: clause_data[1]["explanation_text"], custom: true)
-      newclause.save!
-      all_clauses << newclause.id
+    json_hash.each do |data|
+      byebug
+      clause_data = data[1]
+      if clause_data["custom"]
+        newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+        newclause.save!
+        all_clauses << newclause.id
+      else
+        template = ClauseTemplate.find_by(name: clause_data["template_name"])
+        if template.nil?
+          newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+          newclause.save!
+          all_clauses << newclause.id
+        else
+          text = template.replace_merge_tags(clause_data["parameters"])
+          newclause = Clause.create(text: text, name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: false)
+          newclause.save!
+          all_clauses << newclause.id
+        end
+      end
     end
 
     contract.clauses = all_clauses
