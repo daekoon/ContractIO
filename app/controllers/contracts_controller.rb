@@ -1,4 +1,5 @@
 include ActionView::Helpers::TextHelper
+include ERB::Util
 
 require 'digest/md5'
 require 'pdf-reader'
@@ -20,7 +21,7 @@ class ContractsController < ApplicationController
   end
 
   def explained
-    @explained = simple_format params[:text]
+    @explained = simple_format html_escape params[:text]
     Term.find_each do |term|
       @explained.gsub! /#{term.text}/i, '<a href="/terms/' + term.id.to_s + '">' + term.text + "</a>"
     end
@@ -85,7 +86,7 @@ class ContractsController < ApplicationController
     contract.data = data
     store_clauses_as_data(contract, all_parameters)
 
-    
+
 
     contract.save!
     redirect_to contract_path(contract.id)
@@ -241,7 +242,7 @@ class ContractsController < ApplicationController
         "parameters" => all_parameters[current_clause.id]
       }
       count += 1
-    end 
+    end
     new_data = contract.data
     new_data["clauses"] = clauses.to_json
     contract.update_attribute(:data, new_data)
@@ -256,7 +257,7 @@ class ContractsController < ApplicationController
     contract.data = data
 
     all_clauses = []
-    
+
     contract.lender_address = data[:lender_address]
     contract.borrower_address = data[:borrower_address]
     contract.borrower_name = data[:borrower_name]
