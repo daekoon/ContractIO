@@ -151,6 +151,19 @@ class ContractsController < ApplicationController
     newclause = Clause.create(text: params[:newtext], name: contract.name + '_custom_' + params[:newclauseid], explanation_text: params[:newexplanation], custom: true)
     newclause.save!
     contract.clauses << newclause.id
+    
+    data = contract.data
+    data_clauses = JSON.parse(data["clauses"])
+    data_clauses[(data_clauses.length + 1).to_s] = {
+      "custom" => newclause.custom,
+      "template_name" => newclause.template_name,
+      "text" => newclause.text,
+      "explanation_text" => newclause.explanation_text,
+      "name" => newclause.name,
+      "parameters" => nil
+    }
+    data["clauses"] = data_clauses.to_json
+    contract.data = data
     contract.save!
     redirect_to contract_path(contract.id)
   end
@@ -227,7 +240,6 @@ class ContractsController < ApplicationController
     custom_clauses.each do |clause|
       all_clauses << clause
     end
-
     contract.update_attribute(:clauses, all_clauses)
     all_parameters
   end
@@ -251,7 +263,6 @@ class ContractsController < ApplicationController
     new_data["clauses"] = clauses.to_json
     contract.update_attribute(:data, new_data)
     contract.save
-
   end
 
   def upload_loan_contract(data)
@@ -272,7 +283,6 @@ class ContractsController < ApplicationController
     contract.user = current_user
 
     json_hash = JSON.parse(data[:clauses])
-
     json_hash.each do |data|
       clause_data = data[1]
       if clause_data["custom"]
