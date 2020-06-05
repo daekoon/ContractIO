@@ -168,16 +168,16 @@ class ContractsController < ApplicationController
 
   def generate_clauses(contract)
     all_parameters = {}
+    custom_clauses = []
     contract.clauses.each do |clause|
       current_clause = Clause.find(clause)
       # Only destroy template clauses when you edit
       unless current_clause.custom
         current_clause.destroy
       else
-
+        custom_clauses << current_clause.id
       end
     end
-
     all_clauses = []
     base_template = ClauseTemplate.find_by(name: 'loan_base')
     parameters = [contract.lender_name, contract.borrower_name, contract.lender_address,
@@ -223,6 +223,10 @@ class ContractsController < ApplicationController
                            template_name: template.name, custom: false)
     all_clauses << clause.id
     all_parameters[clause.id] = parameters
+
+    custom_clauses.each do |clause|
+      all_clauses << clause
+    end
 
     contract.update_attribute(:clauses, all_clauses)
     all_parameters
@@ -270,16 +274,15 @@ class ContractsController < ApplicationController
     json_hash = JSON.parse(data[:clauses])
 
     json_hash.each do |data|
-      byebug
       clause_data = data[1]
       if clause_data["custom"]
-        newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+        newclause = Clause.create(text: clause_data["text"], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
         newclause.save!
         all_clauses << newclause.id
       else
         template = ClauseTemplate.find_by(name: clause_data["template_name"])
         if template.nil?
-          newclause = Clause.create(text: clause_data[:text], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
+          newclause = Clause.create(text: clause_data["text"], name: clause_data["name"], explanation_text: clause_data["explanation_text"], custom: true)
           newclause.save!
           all_clauses << newclause.id
         else
