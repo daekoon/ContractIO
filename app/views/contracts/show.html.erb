@@ -17,17 +17,50 @@
 </div>
 <center><h1><%= @contract.name %></h1></center>
 <h2>Contract Details</h2>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Contract type:</th>
+      <td><%= @contract.contract_type %></td>
+    </tr>
+    <tr>
+      <th scope="row">Lender Name:</th>
+      <td><%= @contract.lender_name %></td>
+    </tr>
+    <tr>
+      <th scope="row">Borrower Name:</th>
+      <td><%= @contract.borrower_name %></td>
+    </tr>
+    <tr>
+      <th scope="row">Lender Address:</th>
+      <td><%= @contract.lender_address %></td>
+    </tr>
+    <tr>
+      <th scope="row">Borrower Address:</th>
+      <td><%= @contract.borrower_address %></td>
+    </tr>
+    <tr>
+      <th scope="row">Loan Amount:</th>
+      <td><%= @contract.loan_amount %></td>
+    </tr>
+    <tr>
+      <th scope="row">Loan Duration:</th>
+      <td><%= @contract.loan_duration %> months</td>
+    </tr>
+    <tr>
+      <th scope="row">Interest Rate:  </th>
+      <td><%= @contract.interest_rate %></td>
+    </tr>
+  </tbody>
+</table>
 
-<div><b>Contract type:</b> <%= @contract.contract_type %> </div>
-<div><b>Lender Name:</b> <%= @contract.lender_name %> </div>
-<div><b>Borrower Name:</b> <%= @contract.borrower_name %> </div>
-<div><b>Lender Address:</b> <%= @contract.lender_address %> </div>
-<div><b>Borrower Address:</b> <%= @contract.borrower_address %> </div>
-<div><b>Loan Amount:</b> <%= @contract.loan_amount %> </div>
-<div><b>Loan Duration:</b> <%= @contract.loan_duration %> months </div>
-<div><b>Interest Rate:</b> <%= @contract.interest_rate %> % </div>
-
-<h2>Current clauses</h2>
+<h2>Additional clauses</h2>
 <% counter = 0 %>
 <table id='employee-table' class="table table-hover">
   <thead>
@@ -35,7 +68,7 @@
       <th>ID</th>
       <th>Clause</th>
       <th>Explanation</th>
-      <th>Delete</th>
+      <th>Action</th>
     </tr>
   </thead>
 
@@ -51,7 +84,7 @@
           <%= hidden_field_tag :id, @contract.id %>
           <%= hidden_field_tag :clauseid, clause.id %>
           <%= hidden_field_tag :contractclauseid, counter %>
-          <button type="submit">Delete</button>
+          <%= submit_tag "Delete", class: 'btn btn-danger' %>
           <% end %>
         </td>
       </tr>
@@ -63,9 +96,9 @@
     <%= hidden_field_tag :newclauseid, counter %>
     <tr>
       <td> <%= counter %> </td>
-      <td> <%= text_field_tag(:newtext) %> </td>
-      <td> <%= text_field_tag(:newexplanation) %> </td>
-      <td><button type="submit">Add</button></td>
+      <td> <%= text_field_tag(:newtext, "", class: 'form-control') %> </td>
+      <td> <%= text_field_tag(:newexplanation, "", class: 'form-control') %> </td>
+      <td> <%= submit_tag "Add", class: 'btn btn-success' %></td>
     </tr>
     <% end %>
   </tbody>

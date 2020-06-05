@@ -1,17 +1,15 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-  <aside class="col-md-4">
+  <aside class="col-md-2">
     <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
+      <%= gravatar_for @user %>
+      <h1 class="displayname"><%= @user.name %></h1>
     </section>
   </aside>
     <%= link_to 'contracts/upload' do %>
-    <button type="button" class="btn btn-primary">Upload Contract</button>
+    <button type="button" class="btn btn-primary" class="actionbutton">Upload Contract</button>
   <% end %>
-  <div class="col-md-8">
+  <div class="col-md-10">
       <h3>Contracts (<%= @user.contracts.count %>)</h3>
       <ol class="contracts">
         <%= render @contracts %>

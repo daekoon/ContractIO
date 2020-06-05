@@ -5,7 +5,7 @@
   <div class="col-md-6 col-md-offset-3">
     <%= form_tag('/contracts/generate', :method => "post") do %>
       <%= label_tag(:name, "Contract name:") %>
-      <%= text_field_tag(:name) %>
+      <%= text_field_tag(:name, "", class: 'form-control') %>
 
       <%= label_tag(:language, "Preferred language for agreement") %></br>
       <%= radio_button_tag(:language, "english") %><%= label_tag(:language_english, "English") %>
@@ -13,27 +13,27 @@
       <%= radio_button_tag(:language, "tamil") %><%= label_tag(:language_tamil, "Tamil") %>
       </br></br>
       <%= label_tag(:lender_address, "Lender address") %>
-      <%= text_field_tag(:lender_address) %>
+      <%= text_field_tag(:lender_address, "", class: 'form-control') %>
 
       <%= label_tag(:borrower_address, "Borrower address") %>
-      <%= text_field_tag(:borrower_address) %>
+      <%= text_field_tag(:borrower_address, "", class: 'form-control') %>
 
       <%= label_tag(:borrower_name, "Borrower name:") %>
-      <%= text_field_tag(:borrower_name) %>
+      <%= text_field_tag(:borrower_name, "", class: 'form-control') %>
 
       <%= label_tag(:lender_name, "Lender name:") %>
-      <%= text_field_tag(:lender_name) %>
+      <%= text_field_tag(:lender_name, "", class: 'form-control') %>
 
       <%= label_tag(:loan_amount, "Loan amount (in SGD):") %>
-      <%= text_field_tag(:loan_amount) %>
+      <%= text_field_tag(:loan_amount, "", class: 'form-control') %>
 
       <%= label_tag(:loan_duration, "Loan duration (in months):") %>
-      <%= text_field_tag(:loan_duration) %>
+      <%= text_field_tag(:loan_duration, "", class: 'form-control') %>
 
       <%= label_tag(:interest_rate, "Annual loan interest rate (in percentage):") %>
-      <%= text_field_tag(:interest_rate) %>
+      <%= text_field_tag(:interest_rate, "", class: 'form-control') %>
 
-      <%= submit_tag("Create") %>
+      <%= submit_tag("Create", class: 'btn btn-primary') %>
     <% end %>
   </div>
 </div>
